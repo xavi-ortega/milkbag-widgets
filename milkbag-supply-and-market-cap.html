@@ -13,8 +13,22 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    height: 150px;
+    min-height: 150px;
     background: rgb(46, 170, 215);
+  }
+
+  @media only screen and (max-width: 600px) {
+    section.current-burned-supply {
+      flex-direction: column;
+    }
+
+    section.current-burned-supply>div {
+      margin-top: 20px;
+    }
+
+    section.market-cap-goal-progress>p {
+      margin-top: 20px;
+    }
   }
 
 
@@ -39,7 +53,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    height: 75px;
+    min-height: 75px;
     background: rgb(46, 170, 215);
   }
 
@@ -53,6 +67,7 @@
   section.market-cap-goal-progress>p>span {
     color: rgb(215, 46, 46);
     font-weight: bold;
+    font-size: 36px;
   }
 </style>
 <section class="current-burned-supply">
