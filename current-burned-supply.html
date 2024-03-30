@@ -1,0 +1,62 @@
+<style>
+  section {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 150px;
+    background: rgb(46, 170, 215);
+  }
+
+
+  section>div {
+    color: white;
+    text-align: center;
+    font-family: 'Adigiana\ Toybox\ Regular', system-ui;
+    font-size: 24px;
+  }
+
+  div>span {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px 15px;
+    display: block;
+    color: rgb(46 170 215);
+    margin-top: 10px;
+    font-weight: bold;
+  }
+</style>
+<section>
+  <div>
+    Supply🥛 <br> <span id="current-supply">Loading...</span>
+  </div>
+  <div>
+    Burned🔥<br> <span id="burned-supply">Loading...</span>
+  </div>
+</section>
+<script>
+  const INITIAL_SUPPLY = 1_000_000_000;
+  const formatter = new Intl.NumberFormat('en', { maximumSignificantDigits: 10 });
+
+  fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getTokenSupply',
+      params: ['2ubuHGFS4VJVxSEpvV3kDwz6JiuXdaAoGMwrwYC87tp8']
+    })
+  })
+    .then(response => response.json())
+    .then(({ result }) => {
+      const supply = result.value.uiAmount;
+      document.getElementById('current-supply').innerHTML = formatter.format(Math.round(supply));
+      document.getElementById('burned-supply').innerHTML = formatter.format(Math.round(INITIAL_SUPPLY - supply));
+    }).catch(() => {
+      document.getElementById('current-supply').innerHTML = 'N/A';
+      document.getElementById('burned-supply').innerHTML = 'N/A';
+    });
+</script>
