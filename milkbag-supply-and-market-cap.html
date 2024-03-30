@@ -25,6 +25,28 @@
     margin-top: 10px;
     font-weight: bold;
   }
+
+  section.market-cap-goal-progress {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 75px;
+    background: rgb(46, 170, 215);
+  }
+
+
+  section.market-cap-goal-progress>p {
+    color: white;
+    text-align: center;
+    font-family: 'Adigiana\ Toybox\ Regular', system-ui;
+    font-size: 24px;
+  }
+
+  section.market-cap-goal-progress>p>span {
+    color: rgb(215, 46, 46);
+    font-weight: bold;
+  }
 </style>
 <section class="current-burned-supply">
   <div>
@@ -33,9 +55,16 @@
   <div>
     Burned🔥<br> <span id="burned-supply">Loading...</span>
   </div>
+  <div>
+    Market cap📈<br> <span id="market-cap">Loading...</span>
+  </div>
+</section>
+<section class="market-cap-goal-progress">
+  <p>We are <span id="multiplier">(loading...)</span> till we hit 100M market cap</p>
 </section>
 <script>
   const INITIAL_SUPPLY = 1_000_000_000;
+  const GOAL_MARKET_CAP = 100_000_000;
   const formatter = new Intl.NumberFormat('en', { maximumSignificantDigits: 10 });
 
   fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
@@ -52,9 +81,27 @@
   })
     .then(response => response.json())
     .then(({ result }) => {
-      const supply = result.value.uiAmount;
+      const supply = result.value.uiAmount
       document.getElementById('current-supply').innerHTML = formatter.format(Math.round(supply));
       document.getElementById('burned-supply').innerHTML = formatter.format(Math.round(INITIAL_SUPPLY - supply));
+
+      fetch('https://public-api.birdeye.so/public/price?address=2ubuHGFS4VJVxSEpvV3kDwz6JiuXdaAoGMwrwYC87tp8', {
+        method: 'GET',
+        headers: {
+          'X-API-KEY': '11b05329003a46be848674f3b2bd89de'
+        }
+      })
+        .then(response => response.json())
+        .then(({ data }) => {
+          const price = data.value;
+          const currentMarketCap = supply * price;
+          const multiplier = GOAL_MARKET_CAP / currentMarketCap;
+          const formattedMultiplier = formatter.format(Math.round(multiplier));
+          document.getElementById('market-cap').innerHTML = '$ '.concat(formatter.format(Math.round(currentMarketCap)));
+          document.getElementById('multiplier').innerHTML = formattedMultiplier.concat('x');
+        }).catch(() => {
+          document.getElementById('multiplier').innerHTML = 'N/A';
+        });
     }).catch(() => {
       document.getElementById('current-supply').innerHTML = 'N/A';
       document.getElementById('burned-supply').innerHTML = 'N/A';
