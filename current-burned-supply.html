@@ -1,5 +1,5 @@
 <style>
-  section {
+  section.current-burned-supply {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
@@ -9,14 +9,14 @@
   }
 
 
-  section>div {
+  section.current-burned-supply>div {
     color: white;
     text-align: center;
     font-family: 'Adigiana\ Toybox\ Regular', system-ui;
     font-size: 24px;
   }
 
-  div>span {
+  section.current-burned-supply>div>span {
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.7);
     padding: 5px 15px;
@@ -26,7 +26,7 @@
     font-weight: bold;
   }
 </style>
-<section>
+<section class="current-burned-supply">
   <div>
     Supply🥛 <br> <span id="current-supply">Loading...</span>
   </div>
