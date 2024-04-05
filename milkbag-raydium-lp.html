@@ -1,0 +1,106 @@
+<style>
+  @font-face {
+    font-family: 'Adigiana Toybox';
+    src: url(https://assets.zyrosite.com/dOqN5r8PkNIoLq1y/Adigiana%20Toybox%20Regular.woff2);
+  }
+
+  section {
+    font-family: 'Adigiana Toybox', system-ui;
+    color: white;
+  }
+
+  section.raydium-lp {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    background: rgb(46, 170, 215);
+    padding-bottom: 15px;
+  }
+
+  .raydium-lp .pie {
+    --p: 20;
+    --b: 22px;
+    --c: white;
+    --w: 150px;
+
+    width: var(--w);
+    aspect-ratio: 1;
+    position: relative;
+    display: inline-grid;
+    margin: 5px;
+    place-content: center;
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  .raydium-lp .pie:before {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    inset: 0;
+    background: radial-gradient(farthest-side, var(--c) 98%, #0000) top/var(--b) var(--b) no-repeat, conic-gradient(var(--c) calc(var(--p) * 1%), #0000 0);
+    background-size: 0 0, auto;
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
+    mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
+  }
+</style>
+
+<section class="raydium-lp">
+  <h2>Tradeable Tokens left</h2>
+  <div id="raydium-lp-pie" class="pie" style="--p: 0"></div>
+</section>
+
+<script>
+  const { format } = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
+
+  async function getTokenSupply() {
+    return fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getTokenSupply',
+        params: ['2ubuHGFS4VJVxSEpvV3kDwz6JiuXdaAoGMwrwYC87tp8'],
+      }),
+    })
+      .then((response) => response.json())
+      .then(({ result }) => result.value.uiAmount);
+  }
+
+  async function getRaydiumSupply() {
+    return fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getTokenAccountBalance',
+        params: ['39HfN8GdsM52WCaNdUum7UpX3e3vLSwnj6iRR5oFF7QX'],
+      }),
+    })
+      .then((response) => response.json())
+      .then(({ result }) => result.value.uiAmount);
+  }
+
+  getTokenSupply()
+    .then((supply) => {
+      getRaydiumSupply().then((raydiumSupply) => {
+        const tradeableRaydiumSupplyPercent = (raydiumSupply * 100) / supply;
+
+        const pie = document.getElementById('raydium-lp-pie');
+        pie.style = `--p: ${100 - tradeableRaydiumSupplyPercent}`;
+        pie.innerHTML = `${format(tradeableRaydiumSupplyPercent)} %`;
+      });
+    })
+    .catch(() => {
+      document.getElementById('raydium-lp-pie').innerHTML = `N/A`;
+    });
+</script>

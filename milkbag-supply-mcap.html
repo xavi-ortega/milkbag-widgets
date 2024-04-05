@@ -66,44 +66,6 @@
     font-weight: bold;
     font-size: 36px;
   }
-
-  section.raydium-lp {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 150px;
-    background: rgb(46, 170, 215);
-    padding-bottom: 15px;
-  }
-
-  .raydium-lp .pie {
-    --p: 20;
-    --b: 22px;
-    --c: white;
-    --w: 150px;
-
-    width: var(--w);
-    aspect-ratio: 1;
-    position: relative;
-    display: inline-grid;
-    margin: 5px;
-    place-content: center;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  .raydium-lp .pie:before {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    inset: 0;
-    background: radial-gradient(farthest-side, var(--c) 98%, #0000) top/var(--b) var(--b) no-repeat, conic-gradient(var(--c) calc(var(--p) * 1%), #0000 0);
-    background-size: 0 0, auto;
-    -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
-    mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
-  }
 </style>
 
 <section class="current-burned-supply">
@@ -125,15 +87,10 @@
   <p><span id="multiplier">(loading...)</span> till we hit 100 Million Market Cap</p>
 </section>
 
-<section class="raydium-lp">
-  <h2>Tradable Raydium LP</h2>
-  <div id="raydium-lp-pie" class="pie no-round" style="--p: 0"></div>
-</section>
-
 <script>
   const INITIAL_SUPPLY = 1_000_000_000;
   const GOAL_MARKET_CAP = 100_000_000;
-  const formatter = new Intl.NumberFormat('en', { maximumSignificantDigits: 10 });
+  const { format } = new Intl.NumberFormat('en', { maximumSignificantDigits: 10 });
 
   async function getTokenSupply() {
     return fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
@@ -168,49 +125,20 @@
       });
   }
 
-  async function getRaydiumSupply() {
-    return fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getTokenAccountBalance',
-        params: ['39HfN8GdsM52WCaNdUum7UpX3e3vLSwnj6iRR5oFF7QX'],
-      }),
-    })
-      .then((response) => response.json())
-      .then(({ result }) => result.value.uiAmount);
-  }
-
   getTokenSupply()
     .then((supply) => {
-      document.getElementById('current-supply').innerHTML = formatter.format(Math.round(supply));
-      document.getElementById('burned-supply').innerHTML = formatter.format(Math.round(INITIAL_SUPPLY - supply));
+      document.getElementById('current-supply').innerHTML = format(Math.round(supply));
+      document.getElementById('burned-supply').innerHTML = format(Math.round(INITIAL_SUPPLY - supply));
 
       getTokenMarketCap(supply)
         .then((marketCap) => {
           const multiplier = GOAL_MARKET_CAP / marketCap;
-          const formattedMultiplier = formatter.format(Math.round(multiplier));
-          document.getElementById('market-cap').innerHTML = '$ '.concat(formatter.format(Math.round(marketCap)));
+          const formattedMultiplier = format(Math.round(multiplier));
+          document.getElementById('market-cap').innerHTML = '$ '.concat(format(Math.round(marketCap)));
           document.getElementById('multiplier').innerHTML = formattedMultiplier.concat('x');
         })
         .catch(() => {
           document.getElementById('multiplier').innerHTML = 'N/A';
-        });
-
-      getRaydiumSupply()
-        .then((raydiumSupply) => {
-          const tradableRaydiumSupplyPercent = Math.round(((raydiumSupply * 100) / supply) * 100) / 100;
-
-          const pie = document.getElementById('raydium-lp-pie');
-          pie.style = `--p: ${100 - tradableRaydiumSupplyPercent}`;
-          pie.innerHTML = `${tradableRaydiumSupplyPercent}% left`;
-        })
-        .catch(() => {
-          document.getElementById('raydium-lp-pie').innerHTML = `N/A`;
         });
     })
     .catch(() => {
