@@ -74,7 +74,7 @@
     <span id="current-supply">Loading...</span>
   </div>
   <div>
-    Burned🔥<br />
+    Burned <small id="burned-percent"></small>🔥<br />
     <span id="burned-supply">Loading...</span>
   </div>
   <div>
@@ -149,8 +149,11 @@
 
   getTokenSupply()
     .then((supply) => {
+      const burnedSupply = INITIAL_SUPPLY - supply;
+
       document.getElementById('current-supply').innerHTML = format(Math.round(supply));
-      document.getElementById('burned-supply').innerHTML = format(Math.round(INITIAL_SUPPLY - supply));
+      document.getElementById('burned-supply').innerHTML = format(Math.round(burnedSupply));
+      document.getElementById('burned-percent').innerHTML = formatPercent((burnedSupply * 100) / INITIAL_SUPPLY).concat(' %');
 
       getTokenMarketCap(supply)
         .then((marketCap) => {
