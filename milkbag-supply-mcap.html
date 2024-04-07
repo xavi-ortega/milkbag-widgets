@@ -18,7 +18,7 @@
     background: rgb(46, 170, 215);
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 800px) {
     section.current-burned-supply {
       flex-direction: column;
     }
@@ -78,6 +78,10 @@
     <span id="burned-supply">Loading...</span>
   </div>
   <div>
+    Tradeable🔁<br />
+    <span id="tradeable-tokens">Loading...</span>
+  </div>
+  <div>
     Market cap📈<br />
     <span id="market-cap">Loading...</span>
   </div>
@@ -90,7 +94,8 @@
 <script>
   const INITIAL_SUPPLY = 1_000_000_000;
   const GOAL_MARKET_CAP = 100_000_000;
-  const { format } = new Intl.NumberFormat('en', { maximumSignificantDigits: 10 });
+  const { format } = new Intl.NumberFormat('en');
+  const { format: formatPercent } = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
 
   async function getTokenSupply() {
     return fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
@@ -125,6 +130,23 @@
       });
   }
 
+  async function getRaydiumSupply() {
+    return fetch('https://docs-demo.solana-mainnet.quiknode.pro/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getTokenAccountBalance',
+        params: ['39HfN8GdsM52WCaNdUum7UpX3e3vLSwnj6iRR5oFF7QX'],
+      }),
+    })
+      .then((response) => response.json())
+      .then(({ result }) => result.value.uiAmount);
+  }
+
   getTokenSupply()
     .then((supply) => {
       document.getElementById('current-supply').innerHTML = format(Math.round(supply));
@@ -139,6 +161,16 @@
         })
         .catch(() => {
           document.getElementById('multiplier').innerHTML = 'N/A';
+        });
+
+      getRaydiumSupply()
+        .then((raydiumSupply) => {
+          const tradeableRaydiumSupplyPercent = (raydiumSupply * 100) / supply;
+
+          document.getElementById('tradeable-tokens').innerHTML = formatPercent(tradeableRaydiumSupplyPercent).concat(' %');
+        })
+        .catch(() => {
+          document.getElementById('tradeable-tokens').innerHTML = 'N/A';
         });
     })
     .catch(() => {
