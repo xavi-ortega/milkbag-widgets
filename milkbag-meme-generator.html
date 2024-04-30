@@ -1,0 +1,357 @@
+<style>
+  @font-face {
+    font-family: 'Adigiana Toybox';
+    src: url(https://assets.zyrosite.com/dOqN5r8PkNIoLq1y/Adigiana%20Toybox%20Regular.woff2);
+  }
+
+  section {
+    font-family: 'Adigiana Toybox', system-ui;
+    color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    background: rgb(46, 170, 215);
+  }
+
+  section div#meme-wrapper {
+    margin: 10px auto;
+    width: 400px;
+    background: white;
+  }
+
+  div img {
+    width: 100%;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+  }
+
+  button,
+  a {
+    font-size: 16px;
+    font-family: 'Adigiana Toybox', system-ui;
+    background-color: white;
+    color: rgb(46, 170, 215);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid black;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover,
+  a:hover {
+    background-color: rgb(181, 222, 239);
+  }
+</style>
+
+<section>
+  <h2>Generate your milkbag</h2>
+
+  <div class="controls">
+    <button onclick="generateMeme()">Shuffle Comic Image</button>
+    <a id="share-button" target="_blank">Raid</a>
+    <a id="download-button" title="Download comic image">Download</a>
+  </div>
+
+  <div id="meme-wrapper"></div>
+</section>
+
+<script>
+  const memes = [
+    {
+      text: 'CHOO CHOO\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnItGXoAAsneg.jpg',
+      url: 'https://pic.twitter.com/CRP4m8hXzv',
+    },
+    {
+      text: `Don't hate the player hate the game\nThe Milk Stays Fresh`,
+      img: 'https://pbs.twimg.com/media/GMPndzpWQAADnOX.jpg',
+      url: 'https://pic.twitter.com/M36c3Xo5Bh',
+    },
+    {
+      text: 'Just get the right\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnfMnXQAEVwvZ.jpg',
+      url: 'https://pic.twitter.com/oV3Z7YihOO',
+    },
+    {
+      text: 'Just sip\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnguHXQAEehDX.jpg',
+      url: 'https://pic.twitter.com/JY7TZR8aUa',
+    },
+    {
+      text: 'Brings everyone some smile\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPniC2XEAELrGm.jpg',
+      url: 'https://pic.twitter.com/dkBbUxk5Oq',
+    },
+    {
+      text: `Don't regret, just sip\nThe Milk Stays Fresh`,
+      img: 'https://pbs.twimg.com/media/GMPnja_XEAAcM3c.jpg',
+      url: 'https://pic.twitter.com/O1M4m1Zz6b',
+    },
+    {
+      text: `Even the sharks can't get enough\nThe Milk Stays Fresh`,
+      img: 'https://pbs.twimg.com/media/GMPnk2QWMAEhN-n.jpg',
+      url: 'https://pic.twitter.com/GV10VHIz7S',
+    },
+    {
+      text: 'Just let #MILKBAG Cook\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnmMAWUAA4ysM.jpg',
+      url: 'https://pic.twitter.com/EzIYdJRHd4',
+    },
+    {
+      text: 'Back to the producer\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnnpQW8AEexdl.jpg',
+      url: 'https://pic.twitter.com/LRFzPcYf3z',
+    },
+    {
+      text: `Cats can't without it, the new kid is here\nThe Milk Stays Fresh`,
+      img: 'https://pbs.twimg.com/media/GMPno6MXkAAcv6o.jpg',
+      url: 'https://pic.twitter.com/ZII0S6Gg86',
+    },
+    {
+      text: 'Just chill & sip\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnqXFWwAAQr-P.jpg',
+      url: 'https://pic.twitter.com/Ci3TNkhp6R',
+    },
+    {
+      text: 'Hulk got its powers from\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnrw_WMAAKllA.jpg',
+      url: 'https://pic.twitter.com/Zj4MRAfUlG',
+    },
+    {
+      text: 'Obviously\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPntRjXAAAVTDo.jpg',
+      url: 'https://pic.twitter.com/Ryidg8fW5K',
+    },
+    {
+      text: '#MILKBAG is always with you\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnuvxWgAACNlD.jpg',
+      url: 'https://pic.twitter.com/Vh7iO6LaK1',
+    },
+    {
+      text: '#MILKBAG is here to save you\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnwHfWgAACuad.jpg',
+      url: 'https://pic.twitter.com/ikmRUstJwt',
+    },
+    {
+      text: 'Even Kermit loves\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPnxbrWQAAagKT.jpg',
+      url: 'https://pic.twitter.com/Q58oJhEo2E',
+    },
+    {
+      text: '#MILKBAG makes the decision easy for you\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPny0bXEAAdduk.jpg',
+      url: 'https://pic.twitter.com/UHX0CWp9Gn',
+    },
+    {
+      text: 'The bad guys love\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPn0IpWgAA_Abn.jpg',
+      url: 'https://pic.twitter.com/TfJtgrhDYT',
+    },
+    {
+      text: `#MILKBAG won't stop and always burn\nThe Milk Stays Fresh`,
+      img: 'https://pbs.twimg.com/media/GMPn1bNXkAAaRI2.jpg',
+      url: 'https://pic.twitter.com/1vqIU7aWN8',
+    },
+    {
+      text: 'Cows officially love\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPn3MbXAAAahNo.jpg',
+      url: 'https://pic.twitter.com/TYX2jK1wPE',
+    },
+    {
+      text: `What's hiding in the shadows?\nThe Milk Stays Fresh`,
+      img: 'https://pbs.twimg.com/media/GMPn5F7WIAItZB1.jpg',
+      url: 'https://pic.twitter.com/8eiHnpLqC2',
+    },
+    {
+      text: 'On a moon mission while sipping my\nThe Milk Stays Fresh',
+      img: 'https://pbs.twimg.com/media/GMPn6e1WUAEuLRb.jpg',
+      url: 'https://pic.twitter.com/4aBYY6ovQr',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPn7zFW0AAFN4u.jpg',
+      url: 'https://pic.twitter.com/okmmXsJbRY',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPn9IMWcAAMVOp.jpg',
+      url: 'https://pic.twitter.com/6TSOjPU90i',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPn-jbWQAALqoD.jpg',
+      url: 'https://pic.twitter.com/I3zohSn54Y',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoBRhWoAAxxwf.jpg',
+      url: 'https://pic.twitter.com/k3qPwaCfpP',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoCmHXQAAkfzV.jpg',
+      url: 'https://pic.twitter.com/fypPeAYCbF',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoECOXgAEtsH9.jpg',
+      url: 'https://pic.twitter.com/flVeYzkcPN',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoFfLXcAAu_bt.jpg',
+      url: 'https://pic.twitter.com/3VaPzJXJOT',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoG1DWQAAYIfZ.jpg',
+      url: 'https://pic.twitter.com/yTKXHUURuK',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoIKzWAAAWJ8i.jpg',
+      url: 'https://pic.twitter.com/diHKAwTiDf',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoJgKW8AAcYz4.jpg',
+      url: 'https://pic.twitter.com/uiMZ5ITQgs',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoK09XgAAjc9E.jpg',
+      url: 'https://pic.twitter.com/2tHOdKuKrl',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoMGIXIAADhG8.jpg',
+      url: 'https://pic.twitter.com/7ucipQXFKg',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoNY0XwAI3nI2.jpg',
+      url: 'https://pic.twitter.com/y1rZhHEOLb',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoO9PXAAADxSy.jpg',
+      url: 'https://pic.twitter.com/1QYHkL5tK9',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoQV2W8AAyREl.jpg',
+      url: 'https://pic.twitter.com/cheBVMQpaT',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoRsNXQAA3-Wt.jpg',
+      url: 'https://pic.twitter.com/13WDvZG0vA',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoS8sW8AAhb0W.jpg',
+      url: 'https://pic.twitter.com/OZlz2Mf7QZ',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoUM4XIAAQHLo.jpg',
+      url: 'https://pic.twitter.com/X8MeldJ9Hj',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoVdTXIAAo7EE.jpg',
+      url: 'https://pic.twitter.com/Q7D1TwjVgr',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoW20X0AA0nPQ.jpg',
+      url: 'https://pic.twitter.com/c9rr9v14wm',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoYJbW0AA-uDh.jpg',
+      url: 'https://pic.twitter.com/RUGs4m25N3',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoZYMXgAAX0af.jpg',
+      url: 'https://pic.twitter.com/tR0AjMXZOx',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoavVWMAErSIS.jpg',
+      url: 'https://pic.twitter.com/xwDWgRMGj7',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPocDkWAAA0up6.jpg',
+      url: 'https://pic.twitter.com/sZuQkbQ3Md',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPodhxWQAADWMi.jpg',
+      url: 'https://pic.twitter.com/V3qFB9kmML',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPoexSXUAEHptd.jpg',
+      url: 'https://pic.twitter.com/n2G5uxu5j6',
+    },
+    {
+      text: '',
+      img: 'https://pbs.twimg.com/media/GMPogUqXUAAE3Cs.jpg',
+      url: 'https://pic.twitter.com/9xVTX0VRQM',
+    },
+  ];
+
+  function generateMeme() {
+    const wrapper = document.getElementById('meme-wrapper');
+
+    const meme = memes[Math.floor(Math.random() * memes.length)];
+
+    const image = document.createElement('img');
+    image.src = meme.img;
+    image.alt = 'Milkbag meme';
+
+    document.getElementById('share-button').href = `https://twitter.com/intent/tweet?text=${encodeURI(meme.text + ' ' + meme.url)}&hashtags=MILKBAG&screen_name=MilkbagSol`;
+
+    fetch(meme.img)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a new FileReader innstance
+        const reader = new FileReader();
+
+        // Add a listener to handle successful reading of the blob
+        reader.addEventListener('load', () => {
+          const image = new Image();
+
+          // Set the src attribute of the image to be the resulting data URL
+          // obtained after reading the content of the blob
+          const downloadButton = document.getElementById('download-button');
+
+          downloadButton.href = reader.result;
+          downloadButton.setAttribute('download', 'milkbag-comic-image.jpg');
+        });
+
+        // Start reading the content of the blob
+        // The result should be a base64 data URL
+        reader.readAsDataURL(blob);
+      });
+
+    wrapper.innerHTML = '';
+    wrapper.append(image);
+  }
+
+  generateMeme();
+</script>
