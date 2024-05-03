@@ -4,6 +4,10 @@
     src: url(https://assets.zyrosite.com/dOqN5r8PkNIoLq1y/Adigiana%20Toybox%20Regular.woff2);
   }
 
+  section {
+    padding: 10px;
+  }
+
   button {
     font-family: 'Adigiana Toybox', system-ui;
     cursor: pointer;
@@ -19,7 +23,9 @@
   }
 </style>
 
-<button onclick="connect()">Connect Bitget Wallet</button>
+<section>
+  <button onclick="connect()">Connect Bitget Wallet</button>
+</section>
 
 <script>
   async function connect() {
