@@ -13,7 +13,7 @@ function getTwitterPic(post) {
         img: pic.media_url_https,
       };
     })
-    .catch((error) => {
+    .catch(() => {
       const manualUrl = `https://twitter.com/MilkbagLFG/status/${post}`;
 
       console.error('Error: Try to do it manually - ', manualUrl);
@@ -48,6 +48,7 @@ fs.readFile('memes.csv', 'utf8', async (err, data) => {
       text: fields[2]?.length > 0 ? fields[2].replace(/\"/g, '') : 'The Milk stays Fresh', // Assuming CSV text field is at index 2
       img,
       url,
+      type: fields[1] === 'AI Tool' ? 'comic' : 'meme'
     });
   }
 
