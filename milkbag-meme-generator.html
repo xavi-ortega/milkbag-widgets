@@ -16,13 +16,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 15px;
     background: rgb(46, 170, 215);
   }
 
   section .thumbnail {
     margin-block: 20px;
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     min-height: 600px;
     display: flex;
     justify-content: center;
@@ -36,13 +37,13 @@
   }
 
   div#meme-wrapper {
-    width: 415px;
+    width: 80%;
+    margin-top: 12.5%;
     background-color: white;
     aspect-ratio: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 60px;
   }
 
   div#meme-wrapper img {
@@ -54,6 +55,13 @@
     display: flex;
     justify-content: space-evenly;
     gap: 10px;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .controls {
+      flex-direction: column;
+      text-align: center;
+    }
   }
 
   header button {
