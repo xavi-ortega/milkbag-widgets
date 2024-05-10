@@ -10,36 +10,69 @@
     font-family: 'Adigiana Toybox', cursive;
     user-select: none;
     color: white;
+    padding: 15px;
   }
+
+  article {
+    max-width: 431px;
+    margin: auto;
+    position: relative;
+  }
+
   header {
     margin: 0 auto;
-    width: 431px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
   }
+
   h1 {
     background: url('https://i.ibb.co/5LTHN2x/Custom.png') 0% 340px;
     padding: 1.2rem 0;
     margin: 0;
     color: white;
   }
+
   .score-container {
     display: flex;
     justify-content: space-between;
     padding: 8px 6px;
     background: #43b3db;
   }
+
+  canvas {
+    padding: 100px 0 0 0;
+    outline: 0px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: auto;
+  }
+
+  
+  @media only screen and (max-width: 300px) {
+    canvas {
+      padding-top: 120px;
+    }
+  }
 </style>
 
 <section>
-  <header>
-    <h1>MILKBAG Mooner</h1>
-    <div class="score-container">
-      <div id="bestScore"></div>
-      <a id="share-button" target="_blank">Share score</a>
-      <div id="currentScore"></div>
-    </div>
-  </header>
+  <article>
+    <header>
+      <h1>MILKBAG Mooner</h1>
+      <div class="score-container">
+        <div id="bestScore"></div>
+        <a id="share-button" target="_blank">Share score</a>
+        <div id="currentScore"></div>
+      </div>
+    </header>
 
-  <canvas id="canvas" width="431" height="700"></canvas>
+    <canvas id="canvas" height="700" width="431"></canvas>
+  </article>
 </section>
 
 <script>
@@ -50,10 +83,10 @@
 
   // general settings
   let gamePlaying = false;
-  const gravity = 0.5;
-  const speed = 6.2;
+  const gravity = 0.3;
+  const speed = 3.5;
   const size = [68, 36];
-  const jump = -11.5;
+  const jump = -8.5;
   const cTenth = canvas.width / 10;
 
   let index = 0,
@@ -139,8 +172,9 @@
     document.getElementById('bestScore').innerHTML = `Best : ${bestScore}`;
     document.getElementById('currentScore').innerHTML = `Current : ${currentScore}`;
 
-    document.getElementById('share-button').href = `https://twitter.com/intent/tweet?text=I'm playing MILKBAG Mooner and I made it to ${bestScore}!&hashtags=MILKBAG,bullish&screen_name=MilkbagSol`;
-
+    document.getElementById(
+      'share-button'
+    ).href = `https://twitter.com/intent/tweet?text=I'm playing MILKBAG Mooner and I made it to ${bestScore}! @MilkbagSol is the next 100x meme 🚀&hashtags=MILKBAG,MILKBAGMOONER`;
 
     // tell the browser to perform anim
     window.requestAnimationFrame(render);
@@ -151,6 +185,6 @@
   img.onload = render;
 
   // start game
-  document.addEventListener('click', () => (gamePlaying = true));
-  window.onclick = () => (flight = jump);
+  canvas.addEventListener('click', () => (gamePlaying = true));
+  canvas.onclick = () => (flight = jump);
 </script>
