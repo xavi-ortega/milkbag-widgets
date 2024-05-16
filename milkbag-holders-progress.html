@@ -1,0 +1,128 @@
+<style>
+  @font-face {
+    font-family: 'Adigiana Toybox';
+    src: url(https://assets.zyrosite.com/dOqN5r8PkNIoLq1y/Adigiana%20Toybox%20Regular.woff2);
+  }
+
+  section {
+    font-family: 'Adigiana Toybox', system-ui;
+    color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background: rgb(46, 170, 215);
+  }
+
+  .progress-bar {
+    background: rgba(255, 255, 255, 0.2);
+    justify-content: flex-start;
+    border-radius: 100px;
+    align-items: center;
+    position: relative;
+    padding: 0 5px;
+    display: flex;
+    height: 40px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .progress-bar:after {
+    content: '?';
+    font-family: sistem-ui;
+    position: absolute;
+    top: 3px;
+    right: 13px;
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .progress-value {
+    animation: load 3s normal forwards;
+    box-shadow: 0 10px 40px -10px #fff;
+    border-radius: 100px;
+    background: #fff;
+    height: 30px;
+    width: 0;
+
+    --progress: 0%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(46, 170, 215);
+  }
+
+  @keyframes load {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: var(--progress);
+    }
+  }
+</style>
+
+<section>
+    <h2>Holders</h2>
+  <div class="progress-bar">
+    <div class="progress-value" id="progress"></div>
+  </div>
+</section>
+
+<script>
+  const HOLDERS_GOAL = 3000;
+
+  const url = `https://mainnet.helius-rpc.com/?api-key=7747869f-f32d-4d58-9466-b0b1f8fe8a7e`;
+
+  const getHoldersCount = async () => {
+    let holders = 0;
+    let page = 1;
+
+    while (true) {
+      const pageHolders = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'getTokenAccounts',
+          id: 'get-milkbag-holders',
+          params: {
+            mint: '2ubuHGFS4VJVxSEpvV3kDwz6JiuXdaAoGMwrwYC87tp8',
+            page,
+          },
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.result) {
+            console.error('No result in the response', data);
+            return 0;
+          }
+
+          return data.result.total;
+        });
+
+      holders += pageHolders;
+
+      if (pageHolders === 1000) {
+        page++;
+      } else {
+        break;
+      }
+    }
+
+    return holders;
+  };
+
+  getHoldersCount().then((holders) => {
+    const progress = ((holders * 100) / HOLDERS_GOAL).toFixed(2)
+    const progressElement = document.getElementById('progress');
+    progressElement.style = '--progress: '.concat(`${progress}%`);
+    progressElement.innerHTML = `${holders}/${HOLDERS_GOAL}`;
+  });
+</script>
