@@ -8,6 +8,10 @@
     display: none;
   }
 
+  h2 {
+    margin-bottom: 35px;
+  }
+
   section {
     font-family: 'Adigiana Toybox', system-ui;
     color: white;
@@ -17,7 +21,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    padding: 15px 15px 150px 15px;
+    padding: 15px 15px 165px 15px;
     background: rgb(46, 170, 215);
   }
 
@@ -202,14 +206,14 @@
   function generateMeme() {
     const wrapper = document.getElementById('meme-wrapper');
 
-    console.log('a', memes.length, memes)
+    console.log('a', memes.length, memes);
 
     const meme = shuffle(memes);
 
-    console.log('b', memes.length, memes)
+    console.log('b', memes.length, memes);
 
     const image = document.createElement('img');
-    console.log({meme})
+    console.log({ meme });
     image.src = meme.img;
     image.alt = 'Milkbag meme';
 
