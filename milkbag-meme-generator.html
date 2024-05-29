@@ -181,7 +181,7 @@
     image.src = comic.img;
     image.alt = 'Milkbag comic image';
 
-    document.getElementById('share-button').href = `https://twitter.com/intent/tweet?text=${encodeURI(comic.text.replace('#MILKBAG ', '') + ' ' + comic.url)}&hashtags=MILKBAG`;
+    document.getElementById('share-button').href = `https://twitter.com/intent/tweet?text=${encodeURI(comic.text.replace('#MILKBAG ', '') + ' ' + comic.url)}&hashtags=MILKBAG,GOTMILKBAG?`;
 
     fetch(comic.img)
       .then((response) => response.blob())
@@ -217,7 +217,7 @@
     image.src = meme.img;
     image.alt = 'Milkbag meme';
 
-    document.getElementById('share-button').href = `https://twitter.com/intent/tweet?text=${encodeURI(meme.text.replace('#', '') + ' ' + meme.url)}&hashtags=MILKBAG`;
+    document.getElementById('share-button').href = `https://twitter.com/intent/tweet?text=${encodeURI(meme.text.replace('#', '') + ' ' + meme.url)}&hashtags=MILKBAG,GOTMILKBAG?`;
 
     fetch(meme.img)
       .then((response) => response.blob())
