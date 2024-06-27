@@ -144,14 +144,10 @@
   function generateMeme() {
     const wrapper = document.getElementById('meme-wrapper');
 
-    console.log('a', memes.length, memes);
-
     const meme = shuffle(memes);
 
-    console.log('b', memes.length, memes);
-
     const image = document.createElement('img');
-    console.log({ meme });
+
     image.src = meme.img;
     image.alt = 'Milkbag meme';
 
