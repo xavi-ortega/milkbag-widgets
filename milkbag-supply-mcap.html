@@ -88,12 +88,12 @@
 </section>
 
 <section class="market-cap-goal-progress">
-  <p><span id="multiplier">(loading...)</span> till we hit 100 Million Market Cap</p>
+  <p><span id="multiplier">(loading...)</span> till we hit $ 1.99</p>
 </section>
 
 <script>
   const INITIAL_SUPPLY = 1_000_000_000;
-  const GOAL_MARKET_CAP = 100_000_000;
+  const GOAL_PRICE = 1.99;
   const { format } = new Intl.NumberFormat('en');
   const { format: formatPercent } = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
 
@@ -114,7 +114,7 @@
       .then(({ result }) => result.value.uiAmount);
   }
 
-  async function getTokenMarketCap(supply) {
+  async function getTokenPrice() {
     return fetch('https://public-api.birdeye.so/defi/price?address=2ubuHGFS4VJVxSEpvV3kDwz6JiuXdaAoGMwrwYC87tp8', {
       method: 'GET',
       headers: {
@@ -122,12 +122,7 @@
       },
     })
       .then((response) => response.json())
-      .then(({ data }) => {
-        const price = data.value;
-        const marketCap = supply * price;
-
-        return marketCap;
-      });
+      .then(({ data }) => data.value);
   }
 
   async function getRaydiumSupply() {
@@ -155,9 +150,10 @@
       document.getElementById('burned-supply').innerHTML = format(Math.round(burnedSupply));
       document.getElementById('burned-percent').innerHTML = formatPercent((burnedSupply * 100) / INITIAL_SUPPLY).concat(' %');
 
-      getTokenMarketCap(supply)
-        .then((marketCap) => {
-          const multiplier = GOAL_MARKET_CAP / marketCap;
+      getTokenPrice()
+        .then((price) => {
+          const marketCap = supply * price;
+          const multiplier = GOAL_PRICE / price;
           const formattedMultiplier = format(Math.round(multiplier));
           document.getElementById('market-cap').innerHTML = '$ '.concat(format(Math.round(marketCap)));
           document.getElementById('multiplier').innerHTML = formattedMultiplier.concat('x');
